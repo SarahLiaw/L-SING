@@ -1,18 +1,47 @@
 # L-SING
-Learning local neighborhoods of non-Gaussian graphical models. Accepted at AAAI'25.
+Learning local neighborhoods of non-Gaussian graphical models  
+**Accepted at AAAI'25**
 
-There are 3 main experiments done:
-- Butterfly distribution
-- Gaussian distribution (include pre-processing and generation of train, test, validation.)
-- Ovarian Cancer Dataset (from curatedOvarianPackage in R). We saved the dataset that was used in Shutta et al. (2022) experiments that was pre-processed from curatedOvarianPackage, so that we can directly compare out methods between GLASSO and localized SING.
+---
 
-To run the code, please make sure the paths are configured correctly. We recommend going into each folder and running experiments from there since the paths are all relative paths. In this version of the code, we give 1-2 examples of differently parameterized UMNNs (with different number of hidden layers). The experiments written in the submission is also contained in the code here.
+## Experiments
 
-For additional details on experiment choices in terms of regularization, parameterization of UMNN, we refer the readers to the technical appendix.
+We conducted three main experiments:
 
-Citations:
-Wehenkel, A.; and Louppe, G. 2019. Unconstrained Monotonic Neural Networks. In Wallach, H.; Larochelle, H.; Beygelzimer, A.; d'Alch ´e-Buc, F.; Fox, E.; and Garnett, R., eds., Advances in Neural Information Processing Systems, volume 32. Curran Associates, Inc.
+1. **Butterfly Distribution**
+2. **Gaussian Distribution**
+   - Includes pre-processing and generation of training, validation, and test sets.
+3. **Ovarian Cancer Dataset**  
+   - Derived from the `curatedOvarianPackage` in R.  
+   - The dataset used in the experiments by Shutta et al. (2022) was pre-processed from `curatedOvarianPackage` to allow direct comparison between methods (GLASSO and localized L-SING).
 
-Shutta, K. H.; Vito, R. D.; Scholtens, D. M.; and Balasubramanian, R. 2022. Gaussian graphical models with applications to omics analyses. Statistics in Medicine, 41(25): 5150–5187.
+---
 
-NOTE: UMNN Model code was here was from: https://github.com/AWehenkel/UMNN
+## Usage Instructions
+
+To run the code:
+
+1. Ensure that the paths are configured correctly.
+2. Navigate to each folder and run the experiments from there, as the paths are all relative.
+
+This version of the code includes 1–2 examples of differently parameterized UMNNs (with varying numbers of hidden layers). The experiments described in the submission are included in the provided code.
+
+For additional details on experiment choices (e.g., regularization, UMNN parameterization), refer to the **technical appendix**.
+
+---
+
+## Citations
+
+- **Wehenkel, A., & Louppe, G. (2019).**  
+  *Unconstrained Monotonic Neural Networks.*  
+  In Wallach, H.; Larochelle, H.; Beygelzimer, A.; d'Alché-Buc, F.; Fox, E.; and Garnett, R., eds., *Advances in Neural Information Processing Systems,* Vol. 32. Curran Associates, Inc.
+
+- **Shutta, K. H., Vito, R. D., Scholtens, D. M., & Balasubramanian, R. (2022).**  
+  *Gaussian graphical models with applications to omics analyses.*  
+  *Statistics in Medicine,* 41(25), 5150–5187.
+
+---
+
+## Note
+
+The UMNN model code used here is from: [https://github.com/AWehenkel/UMNN](https://github.com/AWehenkel/UMNN)
