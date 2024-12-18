@@ -1,0 +1,186 @@
+---
+title: "butterfly_npn"
+output: html_document
+date: "2024-08-13"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+```{r cars}
+
+library(dplyr)     # Data manipulation
+library(glasso)    # Graphical Lasso
+library(igraph)    # Graph creation and visualization
+library(GGMncv)    # Optional: For alternative penalties in GGMs
+library(bootnet)   # Optional: For bootstrap analysis in GGMs
+library(huge)      # Optional: For tuning parameter selection in GGMs
+
+```
+
+## Including Plots
+
+GLASSO on Ovarian Cancer Dataset using HUGE's GLASSO.
+
+```{r pressure, echo=FALSE}
+myData <- read.table("OC/samples/test.txt", sep="\t")
+
+num_columns <- ncol(myData)
+cat("Number of columns:", num_columns, "\n")
+
+glassoMod <- glasso(cov(myData), rho=0.2, nobs=nrow(myData))
+glassoGGM <- graph_from_adjacency_matrix(-cov2cor(glassoMod$wi), weighted=TRUE, diag=FALSE, mode="undirected")
+
+
+num_rows <- nrow(myData)
+cat("Number of rows:", num_rows, "\n")
+
+# Plot the graph
+plot(glassoGGM, vertex.size=10, vertex.label=NA, layout=layout_with_graphopt)
+
+# Extract and print the precision matrix
+precision_matrix <- glassoMod$wi
+
+# Ensure the matrix is ordered correctly
+# (assuming rownames and colnames of the matrix are in order already)
+heatmap(precision_matrix, main="Precision Matrix Heatmap", 
+        xlab="Variables", ylab="Variables", 
+        col=colorRampPalette(c("blue", "white", "red"))(100),
+        Rowv=NA, Colv=NA)  # Prevents clustering or reordering
+```
+
+
+GLASSO on Ovarian Cancer Dataset using HUGE's nonparanormal.
+
+```{r}
+# Load necessary libraries
+install.packages("huge")
+install.packages("glasso")
+library(huge)
+library(glasso)
+
+
+myData <- read.table("OC/samples/test.txt", sep="\t")
+
+
+num_columns <- ncol(myData)
+num_rows <- nrow(myData)
+cat("Number of columns:", num_columns, "\n")
+cat("Number of rows:", num_rows, "\n")
+
+# Step 2: Apply the Nonparanormal transformation using the "truncation" method
+transformed_data <- huge.npn(myData, npn.func = "truncation")
+
+# Step 3: Estimate the precision matrix using GLASSO on the transformed data
+glassoMod <- glasso(cov(transformed_data), rho=0.2, nobs=nrow(transformed_data))
+
+# Extract the precision matrix (inverse covariance matrix)
+precision_matrix <- glassoMod$wi
+
+precision_matrix <- precision_matrix[nrow(precision_matrix):1, ] # Reverse order because of how it maps in R.
+
+heatmap(precision_matrix, 
+        col=colorRampPalette(c("black", "white"))(100),
+        Rowv=NA, Colv=NA,  # Prevents clustering or reordering
+        labRow=as.character(nrow(precision_matrix):1), # Corrected labels for rows
+        labCol=as.character(1:ncol(precision_matrix)), # Labels for columns
+        cexRow=0.8, cexCol=0.8, # Adjust the size of the tick labels
+        main="", xlab="", ylab="", # Removes title and axis labels
+        las=1) # Rotate column labels to be horizontal
+
+# Step 5: Save the precision matrix to a txt file
+write.table(precision_matrix, file="OC/samples/precision_matrix.txt", sep="\t", row.names=FALSE, col.names=FALSE)
+```
+
+```{r}
+print(precision_matrix)
+```
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+```{r}
+
+# Apply the Nonparanormal transformation using the "shrinkage" method
+transformed_data <- huge.npn(myData, npn.func = "truncation")
+
+# Estimate the precision matrix using GLASSO
+glassoMod <- glasso(cov(transformed_data), rho=0.2, nobs=nrow(transformed_data))
+
+# Extract the precision matrix (inverse covariance matrix)
+precision_matrix <- glassoMod$wi
+
+# Visualize the precision matrix as a heatmap
+heatmap(precision_matrix, main="Precision Matrix Heatmap", 
+        xlab="Variables", ylab="Variables", 
+        col=colorRampPalette(c("blue", "white", "red"))(100),
+        Rowv=NA, Colv=NA)  # Prevents clustering or reordering
+
+
+
+# Convert data to matrix if needed
+myData <- as.matrix(myData)
+
+# Apply the Nonparanormal transformation using the "truncation" method
+transformed_data <- huge.npn(myData, npn.func = "shrinkage")
+
+# Estimate the precision matrix using GLASSO
+glassoMod <- glasso(cov(transformed_data), rho=0.2, nobs=nrow(transformed_data))
+
+# Extract the precision matrix (inverse covariance matrix)
+precision_matrix <- glassoMod$wi
+
+# Reverse the order of the rows to go from 1 to 10 top to bottom
+precision_matrix <- precision_matrix[nrow(precision_matrix):1, ]
+
+# Visualize the precision matrix as a heatmap with black and white color scheme
+heatmap(precision_matrix, 
+        col=colorRampPalette(c("black", "white"))(100),
+        Rowv=NA, Colv=NA,  # Prevents clustering or reordering
+        labRow=NA, labCol=NA, # Removes row and column labels
+        main="", xlab="", ylab="")  # Removes title and axis labels
+
+# Convert data to matrix if needed
+myData <- as.matrix(myData)
+
+# Apply the Nonparanormal transformation using the "truncation" method
+transformed_data <- huge.npn(myData, npn.func = "truncation")
+
+# Estimate the precision matrix using GLASSO
+glassoMod <- glasso(cov(transformed_data), rho=0.2, nobs=nrow(transformed_data))
+
+
+```
+
+This part tests out whether it works for the same Gaussian experiments and verifies with sklearn before implementing the Ovarian Cancer dataset.
+```{r}
+# Install and load necessary packages
+install.packages("huge")
+library(huge)
+
+myData <- read.table("G/test_samples.txt", sep=" ")
+
+myData <- as.matrix(myData)
+
+# Step 2: Apply the 'huge' methods
+# Meinshausen-Bühlmann method
+out.mb <- huge(myData, method = "mb")
+
+# Constrained Tree method
+out.ct <- huge(myData, method = "ct")
+
+# Graphical Lasso method
+out.glasso <- huge(myData, method = "glasso")
+
+# Step 3: Model selection using RIC
+out.select.ric <- huge.select(out.mb, criterion = "ric")
+plot(out.select.ric, main = "Model Selection using RIC")
+
+# Model selection using EBIC
+out.select.ebic <- huge.select(out.glasso, criterion = "ebic")
+plot(out.select.ebic, main = "Model Selection using EBIC")
+
+```
