@@ -1,5 +1,7 @@
 # L-SING
-Learning local neighborhoods of non-Gaussian graphical models  
+Learning local neighborhoods of non-Gaussian graphical models: A measure transport approach
+https://arxiv.org/abs/2503.13899
+
 **Accepted at AAAI'25**
 
 ---
@@ -45,3 +47,17 @@ For additional details on experiment choices (e.g., regularization, UMNN paramet
 ## Note
 
 The UMNN model code used here is from: [https://github.com/AWehenkel/UMNN](https://github.com/AWehenkel/UMNN)
+
+
+## Citations
+If you using L-SING in an academic paper, please cite:
+
+@misc{liaw2025learninglocalneighborhoodsnongaussian,
+      title={Learning local neighborhoods of non-Gaussian graphical models: A measure transport approach}, 
+      author={Sarah Liaw and Rebecca Morrison and Youssef Marzouk and Ricardo Baptista},
+      year={2025},
+      eprint={2503.13899},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG},
+      url={https://arxiv.org/abs/2503.13899}, 
+}
