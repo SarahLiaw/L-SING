@@ -1,10 +1,9 @@
 # L-SING
 Learning local neighborhoods of non-Gaussian graphical models: A measure transport approach
-https://arxiv.org/abs/2503.13899
 
 **Accepted at AAAI'25**
-
----
+Arxiv: https://arxiv.org/abs/2503.13899
+AAAI: https://ojs.aaai.org/index.php/AAAI/article/view/34059/36214
 
 ## Experiments
 
